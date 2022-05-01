@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:math';
 import 'find_solutions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:collection/collection.dart';
 
 void main() {
@@ -53,7 +55,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<List<bool>> board = [], startBoard = [];
   int moves = 0;
-
+  int optimalSolution = 0;
+  dynamic solutions;
   _MyHomePageState() {
     startBoard.addAll([
       [false, false, false],
@@ -63,7 +66,13 @@ class _MyHomePageState extends State<MyHomePage> {
     _initBoard();
   }
 
-  void _initBoard() {
+  Future<void> loadSolutions() async {
+    await rootBundle.loadString('assets/solutions.json');
+    solutions =
+        jsonDecode(await rootBundle.loadString('assets/solutions.json'));
+  }
+
+  void _initBoard() async {
     var r = Random();
     board.clear();
     moves = 0;
@@ -77,6 +86,10 @@ class _MyHomePageState extends State<MyHomePage> {
         board[i][j] = r.nextBool();
       }
     }
+    if (solutions == null) {
+      await loadSolutions();
+    }
+    optimalSolution = solutions![board.toString()]!;
   }
 
   @override
@@ -94,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Center(
             child: Column(
           children: [
-            Text("You won! Took ya ${moves} moves"),
+            Text("You won! Took ya ${moves} moves. Best is ${optimalSolution}"),
             ElevatedButton(
                 onPressed: () => setState(() {
                       _initBoard();

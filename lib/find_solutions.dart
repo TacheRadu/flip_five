@@ -41,7 +41,7 @@ void main() {
     [false, false, false]
   ];
   bktr(board, 0);
-  File('solutions.json').openWrite()
+  File('assets/solutions.json').openWrite()
     ..write(jsonEncode(dp))
     ..close();
 }
