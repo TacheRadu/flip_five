@@ -60,7 +60,13 @@ class _MyHomePageState extends State<MyHomePage> {
       [false, false, false],
       [false, false, false]
     ]);
+    _initBoard();
+  }
+
+  void _initBoard() {
     var r = Random();
+    board.clear();
+    moves = 0;
     board.addAll([
       [false, false, false],
       [false, false, false],
@@ -86,8 +92,17 @@ class _MyHomePageState extends State<MyHomePage> {
       return Scaffold(
         appBar: AppBar(title: Text(widget.title)),
         body: Center(
-          child: Text("You won! Took ya ${moves} moves"),
-        ),
+            child: Column(
+          children: [
+            Text("You won! Took ya ${moves} moves"),
+            ElevatedButton(
+                onPressed: () => setState(() {
+                      _initBoard();
+                    }),
+                child: Text("Play again"))
+          ],
+          mainAxisSize: MainAxisSize.min,
+        )),
       );
     }
 
